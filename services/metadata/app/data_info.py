@@ -22,6 +22,7 @@ class DataInfo:
             metadata_dict["metadata"]["size_in_mb"] = size / 1000000   # divide the size by a million to get the size in mb
             metadata_dict["metadata"]["type"] = self.get_file_type(path)
             metadata_dict["metadata"]["media_type"] = self.get_file_media_type(path)
+            metadata_dict["metadata"]["creation_data"] = self.get_creation_date(path)
             metadata_dict["metadata"]["last_modified_date"] = self.last_modified(path)
 
             return metadata_dict
@@ -47,6 +48,13 @@ class DataInfo:
         """Returns the media type of the file for example audio/wav"""
         mime_type, encoding = mimetypes.guess_type(path)
         return mime_type
+
+    @staticmethod
+    def get_creation_date(path):
+        # Access the st_ctime attribute for the creation timestamp
+        creation_timestamp = path.stat().st_ctime
+        # Convert the timestamp to a human-readable datetime object
+        return datetime.datetime.fromtimestamp(creation_timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
     @staticmethod
     def last_modified(path):
