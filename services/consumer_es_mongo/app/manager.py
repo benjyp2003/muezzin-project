@@ -11,7 +11,7 @@ class Manager:
     def __init__(self):
         self.consumer = Consumer()
         self.es_processor = EsProcessor()
-        self.topic = os.environ.get("TOPIC", "metadata")
+        self.topic = os.environ.get("TOPIC", "transcripts")
         self.mongo_dal = Dal()
         self.logger = Logger.get_logger()
 

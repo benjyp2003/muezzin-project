@@ -23,6 +23,10 @@ MAPPING = {
             },
             "media_type": {
                 "type": "text"
+            },
+            "text": {
+                "type": "text"
             }
+
         }
 }
