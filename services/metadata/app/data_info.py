@@ -15,7 +15,6 @@ class DataInfo:
                              "metadata": {}}
             path = self.get_path(file_path)
             metadata_dict["path"] = str(path.resolve())
-
             metadata_dict["metadata"]["file_name"] = path.name
             size = self.get_size_in_bytes(path)
             metadata_dict["metadata"]["size_in_bytes"] = size

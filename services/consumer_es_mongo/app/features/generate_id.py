@@ -2,6 +2,7 @@ import random
 from datetime import datetime
 
 def generate_unique_id_with_timestamp(timestamp='1979-12-31 23:00:00.000'):
+    """Generates a unique ID based on the modified date (with miliseconds) and a random number"""
     try:
         date_object = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S.%f")
         # Generate a random number to ensure uniqueness within the same millisecond
