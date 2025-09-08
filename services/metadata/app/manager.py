@@ -5,6 +5,7 @@ from pathlib import Path
 
 from services.metadata.app.kafka.kafka_producer import Producer
 
+
 class Manager:
     def __init__(self, folder_path = r"C:\Users\benjy\PycharmProjects\muezzin-project\data\podcasts"):
         self.folder_path = folder_path
@@ -18,8 +19,11 @@ class Manager:
                 data_info = DataInfo(path)
                 info_dict = data_info.initialize_file_info_dict(str(path))
                 print(f"sending info dict {info_dict} to kafka topic - {self.topic}...")
+                self.producer.send(self.topic,  value=info_dict)
                 self.producer.send(self.topic, info_dict)
                 print("Data sent successfully")
+
+                self.producer.flush()
 
         except Exception as e:
             print(f"An error accord: {e}")
