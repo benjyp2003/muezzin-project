@@ -8,15 +8,15 @@ class DataInfo:
         self.folder_path = folder_path
 
 
-    def initialize_file_info_dict(self, file_name: str) -> dict:
+    def initialize_file_info_dict(self, file_path: str) -> dict:
         """Initialize a dict/json that will contain the files path and meta data"""
         try:
             metadata_dict = {"path": "",
                              "metadata": {}}
-            path = self.get_path(file_name)
+            path = self.get_path(file_path)
             metadata_dict["path"] = str(path.resolve())
 
-            metadata_dict["metadata"]["file_name"] = file_name
+            metadata_dict["metadata"]["file_name"] = path.name
             size = self.get_size_in_bytes(path)
             metadata_dict["metadata"]["size_in_bytes"] = size
             metadata_dict["metadata"]["size_in_mb"] = size / 1000000   # divide the size by a million to get the size in mb
