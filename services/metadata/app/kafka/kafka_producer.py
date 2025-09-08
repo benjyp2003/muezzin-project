@@ -12,7 +12,4 @@ class Producer:
             value_serializer=lambda v: json.dumps(v, ensure_ascii=False).encode("utf-8"),
             acks='all'
         )
-        print(producer.config)
-        print(self.broker)
-
         return producer
