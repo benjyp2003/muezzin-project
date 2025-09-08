@@ -12,5 +12,7 @@ class Consumer:
                                  value_deserializer=lambda m: json.loads(m.decode('ascii')),
                                  bootstrap_servers=self.broker,
                                  request_timeout_ms=30000,
-                                 api_version=(2, 0, 2))
+                                 api_version=(2, 0, 2),
+                                 auto_offset_reset='latest')
+
         return consumer
