@@ -1,6 +1,6 @@
 import os
 
-from features.generate_id import generate_unique_id_with_timestamp
+from features.generate_id import generate_unique_id
 from es.index_data import EsProcessor
 from mongo.dal import Dal
 from services.consumer_es_mongo.app.kafka.consumer import Consumer
@@ -24,9 +24,9 @@ class Manager:
                 msg = msg.value
                 if msg:
                     self.logger.info(f"Received new data {msg}")
-                    # Create a unique ID based on the modified date (with miliseconds) and a random number
-                    create_date = msg["metadata"]["last_modified_date"]
-                    id = generate_unique_id_with_timestamp(create_date)
+                    # Create a unique ID based on the file size in bytes and a random number
+                    size = msg["metadata"]["size_in_bytes"]
+                    id = generate_unique_id(size)
                     self.logger.info(f"Created unique id -{id}- for file: {msg["metadata"]["file_name"]}\n")
 
                     self.logger.info("Sending metadata for indexing...")

@@ -27,9 +27,7 @@ class EsProcessor:
             if not self.es.indices.exists(index=self.index):
                 self.es.indices.create(index=self.index, mappings=MAPPING)
                 self.logger.info(f"Created index -{self.index}- successfully")
-            else:
-                self.es.indices.delete(index=self.index)
-                self.es.indices.create(index=self.index, mappings=MAPPING)
+
 
         except Exception as e:
             raise Exception(f"Error while creating index: {e}")
