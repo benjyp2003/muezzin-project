@@ -1,0 +1,28 @@
+import os
+from pymongo import MongoClient, errors
+from gridfs import GridFS
+
+
+class Dal:
+    def __init__(self):
+        self.client = None
+        self.db = None
+        self.database_name = os.getenv("MONGO_DB_NAME", "podcasts")
+        self.mongo_host = os.getenv("MONGO_HOST", "localhost")
+        self.mongo_port = os.getenv("MONGO_PORT", "27017")
+        self.uri = f"mongodb://{self.mongo_host}:{self.mongo_port}/"
+
+
+    def insert_audio_file(self, file_path, id):
+        """Insert a WAV file into MongoDB using GridFS."""
+        try:
+            with MongoClient(self.uri) as client:
+                self.db = client[self.database_name]
+                fs = GridFS(self.db)
+
+                with open(file_path, 'rb') as file_data:
+                    file_id = fs.put(file_data, id=id)
+                    print("Inserted WAV file into GridFS with id:", file_id)
+
+        except Exception as e:
+            raise Exception(f"Error inserting WAV file into GridFS: {e}")
