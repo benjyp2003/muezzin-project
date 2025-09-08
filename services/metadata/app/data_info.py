@@ -13,6 +13,7 @@ class DataInfo:
         try:
             metadata_dict = {"path": "",
                              "metadata": {}}
+
             path = self.get_path(file_path)
             metadata_dict["path"] = str(path.resolve())
             metadata_dict["metadata"]["file_name"] = path.name
@@ -53,12 +54,12 @@ class DataInfo:
         # Access the st_ctime attribute for the creation timestamp
         creation_timestamp = path.stat().st_ctime
         # Convert the timestamp to a human-readable datetime object with miliseconds
-        return datetime.datetime.fromtimestamp(creation_timestamp).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+        return datetime.datetime.fromtimestamp(creation_timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
     @staticmethod
     def last_modified(path):
         mod_time_timestamp = path.stat().st_mtime
-        mod_time = datetime.datetime.fromtimestamp(mod_time_timestamp).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+        mod_time = datetime.datetime.fromtimestamp(mod_time_timestamp).strftime("%Y-%m-%d %H:%M:%S")
         return mod_time
 
 
