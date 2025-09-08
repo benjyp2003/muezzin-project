@@ -1,14 +1,14 @@
 version: "3.9"
 
 services:
-  redpanda:  # kafka container
-    image: redpandadata/redpanda:latest
-    command: >-
-      redpanda start --overprovisioned --smp 1 --memory 1G --reserve-memory 0M
-      --node-id 0 --check=false --kafka-addr PLAINTEXT://0.0.0.0:9092
-      --advertise-kafka-addr PLAINTEXT://redpanda:9092
-    ports:
-      - "9092:9092"
+#  redpanda:  # kafka container
+#    image: redpandadata/redpanda:latest
+#    command: >-
+#      redpanda start --overprovisioned --smp 1 --memory 1G --reserve-memory 0M
+#      --node-id 0 --check=false --kafka-addr PLAINTEXT://0.0.0.0:9092
+#      --advertise-kafka-addr PLAINTEXT://redpanda:9092
+#    ports:
+#      - "9092:9092"
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
@@ -24,15 +24,15 @@ services:
       timeout: 10s
       retries: 10
 
-  metadata:
-    build: ./services/metadata
-    environment:
-      BROKER: redpanda:9092
-      TOPIC: metadata
-    depends_on:
-      - redpanda
-
-
-volumes:
-  mongo-data:
+#  metadata:
+#    build: ./services/metadata
+#    environment:
+#      BROKER: redpanda:9092
+#      TOPIC: metadata
+#    depends_on:
+#      - redpanda
+#
+#
+#volumes:
+#  mongo-data:
 
