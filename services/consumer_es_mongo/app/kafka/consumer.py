@@ -6,9 +6,9 @@ class Consumer:
     def __init__(self):
         self.broker = os.getenv("BROKER", "localhost:9092")
 
-    def get_consumer_events(self, topic):
+    def get_consumer_events(self, topic, group):
         consumer = KafkaConsumer(topic,
-                                 group_id="consumer_es_mongo-group",
+                                 group_id=group,
                                  value_deserializer=lambda m: json.loads(m.decode('ascii')),
                                  bootstrap_servers=self.broker,
                                  request_timeout_ms=30000,

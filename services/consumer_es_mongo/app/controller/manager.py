@@ -24,7 +24,7 @@ class Manager:
 
 
     def consume_data(self):
-            event = self.consumer.get_consumer_events(self.raw_data_topic)
+            event = self.consumer.get_consumer_events(self.raw_data_topic, group="consumer_es_mongo-group")
             self.logger.info(f"Started consuming messages from topic: '{self.raw_data_topic}' ...")
             for message in event:
                 msg = message.value
@@ -55,6 +55,7 @@ class Manager:
 
     def send_to_es_indexing(self, msg, id):
         try:
+            msg["stt_status"] = "pending"
             self.logger.info("Sending metadata for indexing...")
             self.es_processor.index_data(msg.get("metadata"), id)
 

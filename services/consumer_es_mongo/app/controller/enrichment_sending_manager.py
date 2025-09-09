@@ -23,23 +23,22 @@ class EnrichmentTransactionManager:
         try:
             self.logger.info(f"Sending msg for stt processing, to topic '{self.enrich_data_out_topic}'")
             self.producer.send(topic=self.enrich_data_out_topic, value=msg)
-            self.logger.info(f"Sent msg - {msg} to topic '{self.enrich_data_out_topic}' successfully.")
-            self.logger.info("----------------------------------------------------\n")
+            self.logger.info(f"Sent msg - {msg} to topic '{self.enrich_data_out_topic}' successfully.\n")
 
         except Exception as e:
             raise Exception(f"Error sending msg to topic '{self.enrich_data_out_topic}' via kafka: {e}")
 
     def process_enrichment_data(self):
         try:
-            with self.logger_lock:
                 self.logger.info(f"consuming messages from topic: '{self.enrich_data_out_topic}' ...\n")
-                event = self.consumer.get_consumer_events(topic=self.enrich_data_in_topic)
+                event = self.consumer.get_consumer_events(topic=self.enrich_data_in_topic, group="transcribed-group")
                 for message in event:
                     msg = message.value
-                    self.logger.info(f"Received new data {msg}")
+                    self.logger.info(f"\nReceived from topic - '{self.enrich_data_in_topic}'new data {msg}")
                     if msg:
                         text, id = msg.get("text"), msg.get("id")
-                        self.es_processor.add_new_field_to_doc("text", text, id)
+                        self.es_processor.update_field_in_doc("text", text, id)
+                        self.es_processor.update_field_in_doc("stt_status", "finished", id)
 
         except Exception as e:
             raise Exception(f"An error occurred while getting transcribed data: {e}")

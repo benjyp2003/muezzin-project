@@ -21,11 +21,10 @@ class Dal:
         """Insert a WAV file into MongoDB using GridFS."""
         try:
             with MongoClient(self.uri) as client:
-                if self.db is None:
-                    self.db = client[self.database_name]
-                    fs_files_collection = self.db['fs.files']
-                    # Ensure that the id field is unique to avoid duplicates
-                    fs_files_collection.create_index([("id", 1)], unique=True)
+                self.db = client[self.database_name]
+                self.fs_files_collection = self.db['fs.files']
+                # Ensure that the id field is unique to avoid duplicates
+                self.fs_files_collection.create_index([("id", 1)], unique=True)
 
                 fs = GridFS(self.db)
                 with open(file_path, 'rb') as file_data:

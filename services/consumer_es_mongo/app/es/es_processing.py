@@ -33,19 +33,18 @@ class EsProcessor:
             if not self.es.indices.exists(index=self.index):
                 self.es.indices.create(index=self.index, mappings=MAPPING)
                 self.logger.info(f"Created index -{self.index}- successfully")
-
         except Exception as e:
             raise Exception(f"Error while creating index: {e}")
 
 
-    def add_new_field_to_doc(self, field_name, value, id):
+    def update_field_in_doc(self, field_name, value, id):
         try:
             self.es.update(
                 index=self.index,
                 id=id,
                 body={"doc": {field_name: value}}
             )
-            self.logger.info(f"Added new field 'text' to es, with the transcribed text, for id '{id}'")
+            self.logger.info(f"Updated field '{field_name}' to es, with value '{value}', for id '{id}'")
 
         except Exception as e:
             self.logger.error("Error while adding new field to doc")

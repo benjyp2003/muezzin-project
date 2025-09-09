@@ -41,7 +41,8 @@ class Manager:
                     self.logger.info(f"Message sent to kafka topic - '{self.out_topic}' successfully.")
 
         except Exception as e:
-            self.logger.error(f"Error while stt processing: \n{e}")
+            self.logger.error(f"Error while stt processing: \n{e}\n")
+
 
 if __name__ == "__main__":
     m = Manager()
