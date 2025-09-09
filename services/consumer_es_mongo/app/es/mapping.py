@@ -26,6 +26,9 @@ MAPPING = {
             },
             "text": {
                 "type": "text"
+            },
+            "stt_status": {
+                "type": "keyword"
             }
 
         }

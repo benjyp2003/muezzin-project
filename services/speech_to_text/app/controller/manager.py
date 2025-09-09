@@ -8,7 +8,7 @@ from services.utils.logger import Logger
 
 class Manager:
     def __init__(self):
-        self.in_topic = os.getenv("IN_TOPIC", "metadata")
+        self.in_topic = os.getenv("IN_TOPIC", "pre_transcripts")
         self.out_topic = os.getenv("OUT_TOPIC", "transcripts")
         self.consumer = Consumer()
         self.producer = Producer().get_producer()
@@ -29,7 +29,7 @@ class Manager:
                     self.logger.info(f"Starting stt on file from path {path}")
                     text = self.transcriber.transcribe_file(path)
                     if text:
-                        self.logger.info(f"Transcribed audio to text successfully, text: {text}")
+                        self.logger.info(f"Transcribed audio to text successfully!")
                     else:
                         self.logger.warn("Text came back empty from transcribing")
 
@@ -41,7 +41,8 @@ class Manager:
                     self.logger.info(f"Message sent to kafka topic - '{self.out_topic}' successfully.")
 
         except Exception as e:
-            self.logger.error(e)
+            self.logger.error(f"Error while stt processing: \n{e}\n")
+
 
 if __name__ == "__main__":
     m = Manager()
