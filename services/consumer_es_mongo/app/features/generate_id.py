@@ -1,13 +1,16 @@
-import random
+import hashlib
 
-def generate_unique_id(size):
-    """Generates a unique ID based on the file size and a random number"""
+
+def generate_unique_id(size, file_name):
+    """Generates a unique ID based on a hash on the file size and the file name"""
     try:
-        random_number = random.SystemRandom().randint(0, 9999)
+        data_string = str(size) + file_name
 
-        # Combine the size and random component into a string
-        unique_id = f"{size}-{random_number}"
-        return unique_id
+        # Using SHA-256
+        sha256_hash = hashlib.sha256(data_string.encode('utf-8')).hexdigest()[:15]
+        return sha256_hash
 
     except Exception as e:
         raise Exception(f"An error accord while generating a unique ID: {e}")
+
+
