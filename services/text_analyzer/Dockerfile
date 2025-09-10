@@ -4,10 +4,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY utils/ ./utils/
-
 COPY . .
 
 WORKDIR /app
 ENV PYTHONPATH=/app
-CMD ["python", "app/controller/manager.py"]
+CMD ["python", "app/manager.py"]

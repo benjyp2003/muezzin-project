@@ -55,7 +55,7 @@ class Manager:
 
     def send_to_es_indexing(self, msg, id):
         try:
-            msg["stt_status"] = "pending"
+            msg.get("metadata")["stt_status"] = "pending"
             self.logger.info("Sending metadata for indexing...")
             self.es_processor.index_data(msg.get("metadata"), id)
 
