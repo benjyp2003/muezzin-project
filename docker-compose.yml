@@ -43,22 +43,22 @@ services:
 
   metadata:
     build:
-      context: ./services
-      dockerfile: metadata/Dockerfile
+      context: .
+      dockerfile: services/metadata/Dockerfile
     container_name: metadata
     environment:
       - BROKER=broker:9092
       - TOPIC=metadata
       - FOLDER_PATH=/data/input
     volumes:
-      - ./data/input:app/data/input
+      - ./data/podcasts:app/data/podcasts
     depends_on:
       - broker
 
   consumer_es_mongo:
     build:
-      context: ./services
-      dockerfile: consumer_es_mongo/Dockerfile
+      context: .
+      dockerfile: services/consumer_es_mongo/Dockerfile
     container_name: consumer_es_mongo
     environment:
       - BROKER=broker:9092
@@ -78,8 +78,8 @@ services:
 
   speech_to_text:
     build:
-      context: ./services
-      dockerfile: speech_to_text/Dockerfile
+      context: .
+      dockerfile: services/speech_to_text/Dockerfile
     container_name: speech_to_text
     environment:
       - BROKER=broker:9092
@@ -91,13 +91,32 @@ services:
 
   text_analyzer:
     build:
-      context: ./services
-      dockerfile: text_analyzer/Dockerfile
+      context: .
+      dockerfile: services/text_analyzer/Dockerfile
     container_name: text_analyzer
     environment:
       - ES_HOSTS=es
       - ES_PORT=9200
     depends_on:
       - es
+
+  api:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    container_name: api
+    environment:
+      - ES_HOSTS=es
+      - ES_PORT=9200
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DB_NAME=podcasts
+    ports:
+      - "8000:8000"
+    depends_on:
+      - es
+      - mongodb
+      - text_analyzer
+
 
 

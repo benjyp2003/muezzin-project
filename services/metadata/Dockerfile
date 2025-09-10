@@ -2,12 +2,12 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY metadata/requirements.txt .
+COPY services/metadata/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY utils/ ./utils/
+COPY services/utils/ ./utils/
 
-COPY metadata/ ./
+COPY services/metadata/ ./
 
 WORKDIR /app/app
 ENV PYTHONPATH=/app
