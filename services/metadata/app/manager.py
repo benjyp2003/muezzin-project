@@ -8,8 +8,8 @@ from services.metadata.app.kafka.kafka_producer import Producer
 
 
 class Manager:
-    def __init__(self, folder_path = r"C:\Users\benjy\PycharmProjects\muezzin-project\data\podcasts"):
-        self.folder_path = folder_path
+    def __init__(self):
+        self.folder_path = os.environ.get("FOLDER_PATH", "/data")
         self.producer = Producer().get_producer()
         self.topic = os.environ.get("TOPIC", "metadata")
         self.logger = Logger.get_logger()

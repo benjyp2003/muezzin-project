@@ -1,13 +1,14 @@
 FROM python:3.11-slim
 
 WORKDIR /app
-COPY requirements.txt .
+
+COPY speech_to_text/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY utils/ ./utils/
 
-COPY . .
+COPY speech_to_text/ ./
 
-WORKDIR /app
+WORKDIR /app/app
 ENV PYTHONPATH=/app
 CMD ["python", "app/controller/manager.py"]
