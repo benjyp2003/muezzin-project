@@ -7,6 +7,7 @@
 - **consumer_es_mongo**: Retrieve the metadata (kafka), and first index the metadata and save the files and ID to mongo, then in a different thread (so we wont get collusions) the service sends (kafka) the file path and id to the STT service and gets back (kafka) the transcribed text with id to add the text to the index in es 
 - **speech_to_text**: Retrieve (kafka) a payload with a files path and id, transcribes the audio of the .bat file, adds the text to the payload and sends it back (kafka).
 - **text_analyzer**: Analyzes the text via ES 
+- **api**: Endpoints to retrieve data from es
 
 
 ## Notes:
@@ -45,6 +46,10 @@
 │ │ ├─ app/ # Retrieving text from es and adding text analyzin as 'text-metadata'
 │ │ ├─ requirements.txt
 │ │ └─ Dockerfile
+├─ api/
+│ │ ├─ app/ # Endpoints to retrieve data from es
+│ │ ├─ requirements.txt
+│ │ └─ Dockerfile
 ├─ docker-compose.yml
 ├─ .gitignore
 └─ README.md
@@ -72,3 +77,4 @@ docker-compose down -v
 - Seperate the es and mongo to different services
 - Send the metadata to es, mongo and stt in different topics so if one service is down the other can still work
 - find a way to send automatically to analyzer after transcribing
+- more endpoints for searching and mongo retrieving
