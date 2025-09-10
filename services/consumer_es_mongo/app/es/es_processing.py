@@ -19,7 +19,7 @@ class EsProcessor:
             self.ensure_index()
             self.logger.info(f"Starting to index incoming metadata with id - '{id}', on '{self.index}' index ...")
             try:
-                self.es.index(index=self.index, id=id, body=doc, op_type='create') # op_type='create' to ensure no duplicates
+                self.es.index(index=self.index, id=id, body=doc)
                 self.logger.info("Indexed metadata successfully")
             except elasticsearch.exceptions.ConflictError:
                 self.logger.warn(f"Document with ID '{id}' already exists. Skipping creation.")
