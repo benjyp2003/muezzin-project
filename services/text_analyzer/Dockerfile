@@ -9,6 +9,5 @@ COPY utils/ ./utils/
 
 COPY speech_to_text/ ./
 
-WORKDIR /app/app
-ENV PYTHONPATH=/app
-CMD ["python", "app/controller/manager.py"]
+WORKDIR /app/appENV PYTHONPATH=/app
+CMD ["python", "app/manager/speech_to_text.py"]

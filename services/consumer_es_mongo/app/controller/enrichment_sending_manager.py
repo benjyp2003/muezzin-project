@@ -11,8 +11,8 @@ class EnrichmentTransactionManager:
     def __init__(self):
         self.producer = Producer().get_producer()
         self.consumer = Consumer()
-        self.enrich_data_out_topic = os.environ.get("TOPIC", "pre_transcripts")
-        self.enrich_data_in_topic = os.environ.get("TOPIC", "transcripts")
+        self.enrich_data_out_topic = os.environ.get("OUT_TOPIC", "pre_transcripts")
+        self.enrich_data_in_topic = os.environ.get("IN_TOPIC", "transcripts")
         self.es_processor = EsProcessor()
         self.logger = Logger.get_logger()
         self.logger_lock = threading.Lock()

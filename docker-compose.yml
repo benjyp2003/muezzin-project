@@ -1,38 +1,103 @@
 version: "3.9"
 
-services:
-#  redpanda:  # kafka container
-#    image: redpandadata/redpanda:latest
-#    command: >-
-#      redpanda start --overprovisioned --smp 1 --memory 1G --reserve-memory 0M
-#      --node-id 0 --check=false --kafka-addr PLAINTEXT://0.0.0.0:9092
-#      --advertise-kafka-addr PLAINTEXT://redpanda:9092
-#    ports:
-#      - "9092:9092"
+networks:
+  elasticsearch-kibana:
+    name: elasticsearch-kibana
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+services:
+  broker:
+    image: apache/kafka:latest
+    container_name: broker
+    ports:
+      - "9092:9092"
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.0
+    container_name: es
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
     ports:
       - "9200:9200"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=50s"]
-      interval: 20s
-      timeout: 10s
-      retries: 10
+    networks:
+      - elasticsearch-kibana
 
-#  metadata:
-#    build: ./services/metadata
-#    environment:
-#      BROKER: redpanda:9092
-#      TOPIC: metadata
-#    depends_on:
-#      - redpanda
-#
-#
-#volumes:
-#  mongo-data:
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.0
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - es
+    networks:
+      - elasticsearch-kibana
+
+  metadata:
+    build:
+      context: ./services
+      dockerfile: metadata/Dockerfile
+    container_name: metadata
+    environment:
+      - BROKER=broker:9092
+      - TOPIC=metadata
+      - FOLDER_PATH=/data/input
+    volumes:
+      - ./data/input:app/data/input
+    depends_on:
+      - broker
+
+  consumer_es_mongo:
+    build:
+      context: ./services
+      dockerfile: consumer_es_mongo/Dockerfile
+    container_name: consumer_es_mongo
+    environment:
+      - BROKER=broker:9092
+      - TOPIC=metadata
+      - OUT_TOPIC=pre_transcripts
+      - IN_TOPIC=transcripts
+      - ES_HOSTS=es
+      - ES_PORT=9200
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DB_NAME=podcasts
+    depends_on:
+      - broker
+      - es
+      - mongodb
+      - metadata
+
+  speech_to_text:
+    build:
+      context: ./services
+      dockerfile: speech_to_text/Dockerfile
+    container_name: speech_to_text
+    environment:
+      - BROKER=broker:9092
+      - IN_TOPIC=pre_transcripts
+      - OUT_TOPIC=transcripts
+    depends_on:
+      - broker
+      - consumer_es_mongo
+
+  text_analyzer:
+    build:
+      context: ./services
+      dockerfile: text_analyzer/Dockerfile
+    container_name: text_analyzer
+    environment:
+      - ES_HOSTS=es
+      - ES_PORT=9200
+    depends_on:
+      - es
+
 
